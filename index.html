@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BONKCAT — The Cat on Bonk.fun</title>
+<link rel="icon" type="image/png" href="bonkcat-cropped.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          ink: '#0B0B0B',
+          paper: '#FFFFFF',
+          bonk: {
+            DEFAULT: '#FF5A00',
+            dark: '#C94400',
+            light: '#FF7A33',
+          },
+        },
+        fontFamily: {
+          display: ['"Archivo Black"', 'Arial Black', 'sans-serif'],
+          body: ['Inter', 'sans-serif'],
+          mono: ['"JetBrains Mono"', 'monospace'],
+        },
+      },
+    },
+  };
+</script>
+<style>
+  html { -webkit-font-smoothing: antialiased; }
+  body { font-family: 'Inter', sans-serif; background: #FFFFFF; }
+
+  .headline {
+    font-family: 'Archivo Black', Arial Black, sans-serif;
+    letter-spacing: -0.03em;
+    line-height: 0.92;
+  }
+
+  .watermark {
+    font-family: 'Archivo Black', Arial Black, sans-serif;
+    letter-spacing: -0.02em;
+    color: #FF5A00;
+    user-select: none;
+    pointer-events: none;
+  }
+
+  .mono-label {
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.08em;
+  }
+
+  /* Layered, color-tinted shadow — no flat shadow-md */
+  .btn-copy {
+    box-shadow:
+      0 1px 0 rgba(11,11,11,1),
+      0 8px 20px -6px rgba(255,90,0,0.35),
+      0 2px 6px rgba(11,11,11,0.15);
+    transition: transform 220ms cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 220ms ease;
+  }
+  .btn-copy:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 1px 0 rgba(11,11,11,1),
+      0 14px 28px -8px rgba(255,90,0,0.45),
+      0 4px 10px rgba(11,11,11,0.18);
+  }
+  .btn-copy:active { transform: translateY(0); }
+
+  .btn-outline {
+    transition: transform 220ms cubic-bezier(0.34, 1.56, 0.64, 1), background-color 220ms ease, color 220ms ease;
+  }
+  .btn-outline:hover {
+    transform: translateY(-2px);
+    background-color: #0B0B0B;
+    color: #FFFFFF;
+  }
+  .btn-outline:active { transform: translateY(0); }
+
+  button:focus-visible, a:focus-visible {
+    outline: 3px solid #FF5A00;
+    outline-offset: 2px;
+  }
+
+  .bubble {
+    animation: float 4.5s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-6px); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bubble { animation: none; }
+    .btn-copy, .btn-outline { transition: none; }
+  }
+
+  .copied-toast {
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 180ms ease, transform 180ms ease;
+  }
+  .copied-toast.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body class="bg-white text-ink min-h-screen flex flex-col justify-center">
+
+  <section class="relative overflow-hidden">
+    <div class="relative max-w-[1500px] mx-auto px-6 md:px-16 py-14 sm:py-16 md:py-24 lg:py-28 overflow-hidden">
+      <div class="flex flex-col xl:flex-row xl:items-end gap-8 sm:gap-10 md:gap-14">
+
+        <div class="flex-1 min-w-0 w-full xl:w-auto">
+          <p class="mono-label text-bonk text-[12px] md:text-[15px] font-semibold uppercase mb-5 md:mb-7">
+            COMMUNITY-RUN // BONK.FUN
+          </p>
+
+          <div class="relative">
+            <div class="watermark absolute left-0 bottom-0 translate-y-[16%] pointer-events-none select-none text-[90px] sm:text-[128px] md:text-[192px] lg:text-[248px] font-normal whitespace-nowrap" aria-hidden="true">
+              BONK.FUN
+            </div>
+
+            <h1 class="headline relative z-10 text-ink text-[18vw] sm:text-[92px] md:text-[118px] lg:text-[142px] xl:text-[122px] 2xl:text-[142px] uppercase">
+              <span class="block">THE CAT</span>
+              <span class="block">ON</span>
+              <span class="block">BONK.FUN</span>
+            </h1>
+          </div>
+
+          <div class="relative z-10 max-w-[540px] mt-5 md:mt-9">
+            <p class="text-[17px] md:text-[20px] font-semibold leading-[1.6]">
+              A clean home for the BONKCAT people actually trade. The token already exists. This page never asks for your wallet.
+            </p>
+
+            <div class="flex flex-wrap items-center gap-4 mt-6 md:mt-8">
+              <button id="copyContractBtn" type="button" class="btn-copy inline-flex items-center gap-2 bg-ink text-white uppercase text-[14px] md:text-[15px] font-bold tracking-wide px-6 py-3.5 md:py-4.5">
+                Copy Contract
+                <span aria-hidden="true">↗</span>
+              </button>
+              <a href="#" class="btn-outline inline-flex items-center gap-2 border-2 border-ink text-ink uppercase text-[14px] md:text-[15px] font-bold tracking-wide px-6 py-3.5 md:py-4.5">
+                View Chart
+                <span aria-hidden="true">↗</span>
+              </a>
+              <a
+                href="https://x.com/BONKCATTT"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Follow BONKCAT on X"
+                class="btn-outline inline-flex items-center justify-center border-2 border-ink text-ink w-[56px] h-[56px] md:w-[64px] md:h-[64px] shrink-0"
+              >
+                <svg viewBox="0 0 24 24" fill="currentColor" class="w-[22px] h-[22px] md:w-6 md:h-6" aria-hidden="true">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                </svg>
+              </a>
+            </div>
+
+            <p class="mono-label text-[11px] md:text-[12px] text-ink/60 mt-4 md:mt-6">
+              Not the deployer. Not an allocation page. Just the community.
+            </p>
+          </div>
+        </div>
+
+        <div class="relative shrink-0 w-[55%] sm:w-[300px] md:w-[400px] lg:w-[480px] xl:w-[400px] 2xl:w-[480px] mx-auto xl:mx-0 mt-14 md:mt-16 lg:mt-16 xl:mt-0">
+          <div class="absolute -top-10 sm:-top-12 md:-top-14 lg:-top-14 xl:-top-24 right-0 xl:right-2 bubble">
+            <div class="relative border-[3px] border-ink bg-white rounded-[50%] px-5 py-3 sm:px-6 sm:py-4 w-[165px] sm:w-[195px] md:w-[235px] shadow-[5px_5px_0_0_rgba(11,11,11,1)]">
+              <p class="mono-label text-ink text-[12px] sm:text-[14px] md:text-[16px] font-bold text-center leading-snug" style="font-family: 'Archivo Black', Arial Black, sans-serif; letter-spacing: -0.01em;">
+                VERIFY THE CAT.
+              </p>
+            </div>
+            <span class="absolute -bottom-2 left-9 sm:left-10 w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full bg-white border-[3px] border-ink"></span>
+            <span class="absolute -bottom-5 left-5 sm:-bottom-6 sm:left-6 w-2.5 h-2.5 rounded-full bg-white border-[3px] border-ink"></span>
+          </div>
+
+          <img
+            src="bonkcat-cropped.png"
+            alt="BONKCAT — the cat wearing an orange hard hat"
+            class="w-full h-auto drop-shadow-[0_14px_24px_rgba(11,11,11,0.25)]"
+          />
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="h-[3px] bg-ink"></div>
+
+  <footer class="max-w-[1400px] mx-auto px-6 md:px-14 py-4 md:py-6 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6">
+    <div class="flex items-center justify-between sm:contents">
+      <span class="mono-label text-[11px] font-semibold text-ink/60 whitespace-nowrap uppercase">
+        Exact Contract · Solana
+      </span>
+      <button id="copyFooterBtn" type="button" class="mono-label relative text-[11px] font-bold text-bonk uppercase tracking-wide hover:text-bonk-dark transition-colors whitespace-nowrap text-left sm:text-right sm:order-3">
+        Click to Copy
+        <span id="copiedToast" class="copied-toast mono-label absolute -top-6 right-0 text-[10px] bg-ink text-white px-2 py-1 whitespace-nowrap">Copied!</span>
+      </button>
+    </div>
+    <span id="contractAddress" class="mono-label text-[14px] sm:text-[16px] md:text-[20px] font-normal text-ink break-all sm:flex-1 sm:order-2">
+      DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263
+    </span>
+  </footer>
+
+  <script>
+    const CONTRACT = 'DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263';
+
+    async function copyContract() {
+      try {
+        await navigator.clipboard.writeText(CONTRACT);
+      } catch (e) {
+        const el = document.createElement('textarea');
+        el.value = CONTRACT;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+      }
+      const toast = document.getElementById('copiedToast');
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 1400);
+    }
+
+    document.getElementById('copyContractBtn').addEventListener('click', copyContract);
+    document.getElementById('copyFooterBtn').addEventListener('click', copyContract);
+  </script>
+</body>
+</html>
